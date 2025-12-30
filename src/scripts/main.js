@@ -25,36 +25,46 @@ const errorHandler = (err) => {
 };
 
 const firstPromise = new Promise((resolve, reject) => {
+  const timeId = setTimeout(() => {
+    reject(new Error('First promise was rejected'));
+  }, 3000);
+
   document.addEventListener(
     'click',
     () => {
+      clearTimeout(timeId);
       resolve('First promise was resolved');
     },
     { once: true },
   );
-
-  setTimeout(() => {
-    reject(new Error('First promise was rejected'));
-  }, 3000);
 });
 
 firstPromise.then(successHandler).catch(errorHandler);
 
 const secondPromise = new Promise((resolve) => {
+  let onClick = false;
+
   document.addEventListener(
     'contextmenu',
     (e) => {
       e.preventDefault();
-
+      onClick = true;
       resolve('Second promise was resolved');
+
+      if (onClick) {
+      }
     },
     { once: true },
   );
 
   document.addEventListener(
     'click',
-    (e) => {
+    () => {
+      onClick = true;
       resolve('Second promise was resolved');
+
+      if (onClick) {
+      }
     },
     { once: true },
   );
